@@ -5,22 +5,21 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import EditProfile from './components/EditProfile';
-import DeleteProfile from './components/DeleteProfile'; // Импортируем компонент DeleteProfile
+import DeleteProfile from './components/DeleteProfile';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
-    const [user, setUser] = useState(null); // Состояние для пользователя
+    const [user, setUser] = useState(null);
 
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<Login setUser={setUser} />} /> {/* Передаем setUser */}
+                <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/home" element={<Home user={user} setUser={setUser} />} /> {/* Передаем пользователя и setUser */}
-                <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} /> {/* Передаем setUser */}
-                {/* Удаляем маршрут для DeleteProfile, так как мы показываем его как модальное окно */}
+                <Route path="/home" element={<Home user={user} setUser={setUser} />} />
+                <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} />
             </Routes>
         </Router>
     );

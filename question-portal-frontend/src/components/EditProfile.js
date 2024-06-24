@@ -29,7 +29,7 @@ const EditProfile = ({ setUser }) => {
                 });
 
                 if (response.status === 200) {
-                    const userData = response.data.user; // Достаем данные пользователя
+                    const userData = response.data.user;
                     setFirstName(userData.firstName || '');
                     setLastName(userData.lastName || '');
                     setEmail(userData.email || '');
