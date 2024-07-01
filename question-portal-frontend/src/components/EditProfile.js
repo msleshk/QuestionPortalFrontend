@@ -10,7 +10,7 @@ const EditProfile = ({ setUser }) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const EditProfile = ({ setUser }) => {
                 });
 
                 if (response.status === 200) {
-                    const userData = response.data.user; // Достаем данные пользователя
+                    const userData = response.data.user;
                     setFirstName(userData.firstName || '');
                     setLastName(userData.lastName || '');
                     setEmail(userData.email || '');
@@ -58,7 +58,7 @@ const EditProfile = ({ setUser }) => {
                 lastName,
                 email,
                 phoneNumber,
-                currentPassword,
+                password,
                 newPassword
             }, {
                 headers: {
@@ -127,8 +127,8 @@ const EditProfile = ({ setUser }) => {
                         type="password"
                         className="form-control"
                         placeholder="Current Password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div className="form-group mb-4">

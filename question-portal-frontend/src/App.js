@@ -4,29 +4,32 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
+import Questions from './components/Questions';
 import EditProfile from './components/EditProfile';
-import DeleteProfile from './components/DeleteProfile'; // Импортируем компонент DeleteProfile
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
-    const [user, setUser] = useState(null); // Состояние для пользователя
+    const [user, setUser] = useState(null);
 
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<Login setUser={setUser} />} /> {/* Передаем setUser */}
+                <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
+                <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/home" element={<Home user={user} setUser={setUser} />} /> {/* Передаем пользователя и setUser */}
-                <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} /> {/* Передаем setUser */}
-                {/* Удаляем маршрут для DeleteProfile, так как мы показываем его как модальное окно */}
+                <Route path="/home" element={user ? <Home user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+                <Route path="/edit-profile/:id" element={user ? <EditProfile setUser={setUser} /> : <Navigate to="/login" />} />
+                <Route path="/questions" element={user ? <Questions /> : <Navigate to="/login" />} />
             </Routes>
         </Router>
     );
 }
 
 export default App;
+
+
+
+
 
 
 

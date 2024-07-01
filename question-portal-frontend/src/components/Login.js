@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Login = ({ setUser }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null); // Добавлен стейт для ошибки
+    const [error, setError] = useState(null); // Added error state
     const navigate = useNavigate();
 
     const handleLogin = async (event) => {
@@ -18,6 +18,7 @@ const Login = ({ setUser }) => {
             setUser(userData);
             localStorage.setItem('jwt-token', userData['jwt-token']);
             localStorage.setItem('id', userData['id']);
+            localStorage.setItem('email', userData['email']);
             navigate('/home');
         } catch (error) {
             setError('Login failed. Please check your credentials and try again.');
@@ -53,7 +54,7 @@ const Login = ({ setUser }) => {
                                 required
                             />
                         </div>
-                        {error && <div className="alert alert-danger">{error}</div>} {/* Отображение ошибки */}
+                        {error && <div className="alert alert-danger">{error}</div>}
                         <button type="submit" className="btn btn-primary w-100">Log In</button>
                     </form>
                     <div className="text-center mt-3">

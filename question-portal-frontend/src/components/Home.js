@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditProfile from './EditProfile';
 import DeleteProfile from './DeleteProfile';
+import Questions from './Questions';
 
 const Home = ({ user, setUser }) => {
     const navigate = useNavigate();
     const [showDeleteProfile, setShowDeleteProfile] = useState(false);
+    const [showQuestions, setShowQuestions] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('jwt-token');
@@ -13,18 +15,23 @@ const Home = ({ user, setUser }) => {
     };
 
     const handleDeleteProfile = () => {
-        console.log("Delete profile button clicked");
         setShowDeleteProfile(true);
-        console.log("showDeleteProfile state updated:", true);
     };
 
     const handleCloseDeleteProfile = () => {
-        console.log("Close delete profile modal");
         setShowDeleteProfile(false);
     };
 
     const handleProfileDeleted = () => {
         setUser(null);
+    };
+
+    const handleShowQuestions = () => {
+        setShowQuestions(true);
+    };
+
+    const handleCloseQuestions = () => {
+        setShowQuestions(false);
     };
 
     return (
@@ -35,7 +42,7 @@ const Home = ({ user, setUser }) => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/questions">Your questions</Link>
+                                <button className="nav-link btn" onClick={handleShowQuestions}>Your questions</button>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/answer">Answer the question</Link>
@@ -58,10 +65,14 @@ const Home = ({ user, setUser }) => {
             </nav>
 
             <div className="container">
-                <Routes>
-                    <Route path="/" element={<HomeContent />} />
-                    <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} />
-                </Routes>
+                {showQuestions ? (
+                    <Questions onClose={handleCloseQuestions} />
+                ) : (
+                    <Routes>
+                        <Route path="/" element={<HomeContent />} />
+                        <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} />
+                    </Routes>
+                )}
             </div>
 
             {showDeleteProfile && (
