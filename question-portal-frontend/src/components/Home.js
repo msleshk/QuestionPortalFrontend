@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
 import EditProfile from './EditProfile';
 import DeleteProfile from './DeleteProfile';
+import Questions from './Questions';
+import AnswerPage from './Answers';
 
 const Home = ({ user, setUser }) => {
     const navigate = useNavigate();
     const [showDeleteProfile, setShowDeleteProfile] = useState(false);
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [showAnswers, setShowAnswers] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('jwt-token');
@@ -13,18 +17,31 @@ const Home = ({ user, setUser }) => {
     };
 
     const handleDeleteProfile = () => {
-        console.log("Delete profile button clicked");
         setShowDeleteProfile(true);
-        console.log("showDeleteProfile state updated:", true);
     };
 
     const handleCloseDeleteProfile = () => {
-        console.log("Close delete profile modal");
         setShowDeleteProfile(false);
     };
 
     const handleProfileDeleted = () => {
         setUser(null);
+    };
+
+    const handleShowQuestions = () => {
+        setShowQuestions(true);
+    };
+
+    const handleCloseQuestions = () => {
+        setShowQuestions(false);
+    };
+
+    const handleShowAnswers = () => {
+        setShowAnswers(true);
+    };
+
+    const handleCloseAnswers = () => {
+        setShowAnswers(false);
     };
 
     return (
@@ -35,10 +52,10 @@ const Home = ({ user, setUser }) => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/questions">Your questions</Link>
+                                <button className="nav-link btn" onClick={handleShowQuestions}>Your questions</button>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/answer">Answer the question</Link>
+                                <button className="nav-link btn" onClick={handleShowAnswers}>Answer the questions</button>
                             </li>
                         </ul>
                         <ul className="navbar-nav">
@@ -47,9 +64,9 @@ const Home = ({ user, setUser }) => {
                                     {user.firstName}
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><Link className="dropdown-item" to={`/edit-profile/${user.id}`}>Edit Profile</Link></li>
-                                    <li><button className="dropdown-item" onClick={handleDeleteProfile}>Delete Profile</button></li>
-                                    <li><button className="dropdown-item" onClick={handleLogout}>Log Out</button></li>
+                                    <li><Link className="dropdown-item" to={`/edit-profile/${user.id}`}>Edit profile</Link></li>
+                                    <li><button className="dropdown-item" onClick={handleDeleteProfile}>Delete profile</button></li>
+                                    <li><button className="dropdown-item" onClick={handleLogout}>Log out</button></li>
                                 </ul>
                             </li>
                         </ul>
@@ -58,10 +75,16 @@ const Home = ({ user, setUser }) => {
             </nav>
 
             <div className="container">
-                <Routes>
-                    <Route path="/" element={<HomeContent />} />
-                    <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} />
-                </Routes>
+                {showQuestions ? (
+                    <Questions onClose={handleCloseQuestions} />
+                ) : showAnswers ? (
+                    <AnswerPage onClose={handleCloseAnswers} />
+                ) : (
+                    <Routes>
+                        <Route path="/" element={<HomeContent />} />
+                        <Route path="/edit-profile/:id" element={<EditProfile setUser={setUser} />} />
+                    </Routes>
+                )}
             </div>
 
             {showDeleteProfile && (
@@ -78,14 +101,10 @@ const Home = ({ user, setUser }) => {
 const HomeContent = () => {
     return (
         <div className="container">
-            <h2>Home</h2>
-            <p>Welcome to the Home page!</p>
+            <h2>Home page</h2>
+            <p>Welcome to the Question Portal!</p>
         </div>
     );
 };
 
 export default Home;
-
-
-
-

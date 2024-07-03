@@ -10,8 +10,9 @@ const EditProfile = ({ setUser }) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -45,7 +46,17 @@ const EditProfile = ({ setUser }) => {
         fetchProfileData();
     }, [id]);
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!email) newErrors.email = 'Email is required';
+        if (!password) newErrors.password = 'Current password is required';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSave = async () => {
+        if (!validateForm()) return;
+
         try {
             const token = localStorage.getItem('jwt-token');
             if (!token) {
@@ -58,7 +69,7 @@ const EditProfile = ({ setUser }) => {
                 lastName,
                 email,
                 phoneNumber,
-                currentPassword,
+                password,
                 newPassword
             }, {
                 headers: {
@@ -107,11 +118,12 @@ const EditProfile = ({ setUser }) => {
                 <div className="form-group mb-3">
                     <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                 </div>
                 <div className="form-group mb-3">
                     <input
@@ -125,11 +137,12 @@ const EditProfile = ({ setUser }) => {
                 <div className="form-group mb-3">
                     <input
                         type="password"
-                        className="form-control"
+                        className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                         placeholder="Current Password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                 </div>
                 <div className="form-group mb-4">
                     <input
@@ -147,10 +160,3 @@ const EditProfile = ({ setUser }) => {
 };
 
 export default EditProfile;
-
-
-
-
-
-
-
