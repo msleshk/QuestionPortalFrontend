@@ -130,21 +130,7 @@ const EditQuestionModal = ({ show, handleClose, questionId, handleSave }) => {
     const renderAnswerInput = () => {
         switch (question.answerType) {
             case 'Radio button':
-                return (
-                    <Form.Group controlId="formAnswerOptions">
-                        <Form.Label>Options</Form.Label>
-                        {question.options.map((option, index) => (
-                            <Form.Control
-                                key={index}
-                                type="text"
-                                placeholder={`Option ${index + 1}`}
-                                value={option}
-                                onChange={(e) => handleChange(e, index)}
-                                style={{ marginBottom: '10px' }}
-                            />
-                        ))}
-                    </Form.Group>
-                );
+            case 'Checkbox':
             case 'Combobox':
                 return (
                     <Form.Group controlId="formAnswerOptions">
@@ -158,7 +144,7 @@ const EditQuestionModal = ({ show, handleClose, questionId, handleSave }) => {
                                     onChange={(e) => handleChange(e, index)}
                                     style={{ marginRight: '10px' }}
                                 />
-                                {question.options.length > 2 && (
+                                {question.options.length > 1 && (
                                     <Button
                                         variant="danger"
                                         onClick={() => handleRemoveOption(index)}
@@ -194,7 +180,7 @@ const EditQuestionModal = ({ show, handleClose, questionId, handleSave }) => {
                 answerType: mapAnswerTypeToServer(question.answerType)
             };
 
-            const response = await axios.put(`http://localhost:8080/questions/${questionId}`, updatedQuestion, {
+            const response = await axios.patch(`http://localhost:8080/questions/${questionId}`, updatedQuestion, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

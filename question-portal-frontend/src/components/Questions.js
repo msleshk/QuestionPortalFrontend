@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
-import { Button, Table, Pagination, Container, Row, Col } from 'react-bootstrap';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import {Client} from '@stomp/stompjs';
+import {Button, Table, Pagination, Container, Row, Col} from 'react-bootstrap';
+import {FaEdit, FaTrash, FaPlus} from 'react-icons/fa';
 import AddQuestionModal from './AddQuestionModal';
 import EditQuestionModal from './EditQuestionModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
-const Questions = ({ onClose }) => {
+const Questions = ({onClose}) => {
     const [questions, setQuestions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -66,12 +66,19 @@ const Questions = ({ onClose }) => {
 
         client.onConnect = () => {
             console.log('Connected to WebSocket');
-            client.subscribe('/user/queue/questions', message => {
+            console.log('Subscribing to channel /topic/questions');
+            client.subscribe('/topic/questions', message => {
+                console.log('Received message:', message.body);
                 const updatedQuestion = JSON.parse(message.body);
                 setQuestions(prevQuestions =>
                     prevQuestions.map(q => (q.id === updatedQuestion.id ? updatedQuestion : q))
                 );
             });
+        };
+
+        client.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
         };
 
         client.activate();
@@ -80,6 +87,7 @@ const Questions = ({ onClose }) => {
             client.deactivate();
         };
     }, []);
+
 
     const handleEdit = id => {
         setCurrentQuestionId(id);
@@ -120,7 +128,7 @@ const Questions = ({ onClose }) => {
     const handleCloseEditModal = () => setShowEditModal(false);
 
     const handleChange = (event, index) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         if (name === 'addOption') {
             setNewQuestion(prevState => ({
                 ...prevState,
@@ -197,8 +205,8 @@ const Questions = ({ onClose }) => {
                     <h2>Your questions</h2>
                 </Col>
                 <Col className="text-right">
-                    <Button variant="primary" className="mb-2" onClick={handleShowAddModal} style={{ float: 'right' }}>
-                        <FaPlus /> Add question
+                    <Button variant="primary" className="mb-2" onClick={handleShowAddModal} style={{float: 'right'}}>
+                        <FaPlus/> Add question
                     </Button>
                 </Col>
             </Row>
@@ -223,10 +231,10 @@ const Questions = ({ onClose }) => {
                                 <td>{question.answer}</td>
                                 <td>
                                     <Button variant="warning" onClick={() => handleEdit(question.id)}>
-                                        <FaEdit />
+                                        <FaEdit/>
                                     </Button>{' '}
                                     <Button variant="danger" onClick={() => handleDelete(question.id)}>
-                                        <FaTrash />
+                                        <FaTrash/>
                                     </Button>
                                 </td>
                             </tr>
@@ -235,7 +243,8 @@ const Questions = ({ onClose }) => {
                     </Table>
                     <Pagination>
                         {[...Array(Math.ceil(questions.length / questionsPerPage)).keys()].map(pageNumber => (
-                            <Pagination.Item key={pageNumber + 1} active={pageNumber + 1 === currentPage} onClick={() => handlePageChange(pageNumber + 1)}>
+                            <Pagination.Item key={pageNumber + 1} active={pageNumber + 1 === currentPage}
+                                             onClick={() => handlePageChange(pageNumber + 1)}>
                                 {pageNumber + 1}
                             </Pagination.Item>
                         ))}
